@@ -17,7 +17,7 @@ constructor(private readonly configService : ConfigService) {}
             database: this.configService.get<string>('DB_NAME'),
             username: this.configService.get<string>('DB_USERNAME'),
             password: this.configService.get<string>('DB_PASSWORD'),
-            entities: [],
+            entities: [__dirname + '/../**/*.entity.{js,ts}'],   //vai em meu diretorio caminho source e procura todo arquivo que tem .entity
             synchronize: true
 
         }

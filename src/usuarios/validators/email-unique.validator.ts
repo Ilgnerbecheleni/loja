@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable prettier/prettier */
 import { ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator } from "class-validator";
-import { UsuarioService } from "../usuario.service";
+import { UsuarioRepository } from "../usuario.repository";
 import { Injectable } from "@nestjs/common";
+import { UsuarioService } from "../usuario.service";
 
 @Injectable()
 @ValidatorConstraint({async:true})  // passa que e um validator assincrono
 export class EmailUniquevalidator implements ValidatorConstraintInterface {
+    constructor(private usuarioService: UsuarioService) {}
 
-   constructor(private readonly userService : UsuarioService){}
-
-    async validate(value: any, validationArguments?: ValidationArguments):  Promise<boolean> {
-
-        const user = await this.userService.EmailisExists(value);
-
-        return !user ;
-
+    async validate(
+      value: any,
+      _validationArguments?: ValidationArguments,
+    ): Promise<boolean> {
+      const usuarioComEmailExiste = await this.usuarioService.buscaPorEmail(
+        value,
+      );
+      return !usuarioComEmailExiste;
     }
-}
+  }
 
 
 //funcao decorator personalizada

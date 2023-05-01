@@ -5,10 +5,12 @@ import { ProdutoModule } from './produtos/produto.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConfigService } from './Config/Postgres.config.service';
 import { ConfigModule } from '@nestjs/config';
+import { UsuarioEntity } from './usuarios/usuario.entity';
 
 
 @Module({
-  imports: [UsuarioModule ,
+  imports: [
+    UsuarioModule ,
     ProdutoModule,
     ConfigModule.forRoot({ //CONFIGURA .ENV NIVEL GLOBAL
       isGlobal:true

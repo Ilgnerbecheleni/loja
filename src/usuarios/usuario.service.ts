@@ -1,64 +1,51 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { GetusuarioDTo } from "./Dto/get-usuario.dto";
 import { UsuarioEntity } from "./usuario.entity";
 
-/* eslint-disable prettier/prettier */
+import { Repository } from "typeorm";
+import { UpdateUsuarioDto } from "./Dto/update-usuario.dto";
+
+
 @Injectable()
+
 export class UsuarioService {
-    private usuarios:UsuarioEntity[] = [];
+    constructor(
+        @InjectRepository(UsuarioEntity)
+        private readonly usuarioRepository: Repository<UsuarioEntity>,
+      ) {}
 
-    async create(usuario:UsuarioEntity) {
+      async create(usuarioEntity : UsuarioEntity ){
 
-      this.usuarios.push(usuario);
-      console.log(this.usuarios);
-    }
-
-    async list(){
-      return this.usuarios;
-    }
-
-    async EmailisExists(email:string){
-      const user = this.usuarios.find(
-        usuario => usuario.email === email
-      )
-
-      return user !== undefined;
-    }
-
-    async getByID(id:string){
-      const user = this.usuarios.find(
-        userSave => userSave.id === id
-      );
-      if(!user){
-        throw new Error("Usuario nao existe")
+        await this.usuarioRepository.save(usuarioEntity)
       }
-      return user ;
-    }
 
-    async update(id:string , user: Partial<UsuarioEntity>){
+      async listUsuarios() {
+        const usuariosSalvos = await this.usuarioRepository.find();
+        const usuariosLista = usuariosSalvos.map(
+          (usuario) => new GetusuarioDTo(usuario.id, usuario.nome),
+        );
+        return usuariosLista;
+      }
 
-      const userUpdated = this.getByID(id);
-      //pega todas as chaves e valores
+      async buscaPorEmail(email: string) {
+        const checkEmail = await this.usuarioRepository.findOne({
+          where: { email },
+        });
+        return checkEmail;
+      }
 
-      Object.entries(user).forEach(([chave,valor])=>{
-        if(chave === id){
-          return
-        }
-        userUpdated[chave]= valor ;
-      })
+      async update(id:string , usuarioEntity : UpdateUsuarioDto){
+        this.usuarioRepository.update(id,usuarioEntity);
+      }
 
-      return userUpdated ;
-
-    }
-
-    async delete(id:string){
-      const user = this.getByID(id);
-
-      this.usuarios = this.usuarios.filter(
-        userSave => userSave.id != id
-      )
-      return user ;
-    }
+      async delete(id:string){
+        this.usuarioRepository.delete(id);
+      }
 
 
-  }
+
+
+}

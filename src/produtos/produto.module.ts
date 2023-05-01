@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { Module } from "@nestjs/common";
 import { ProdutoController } from "./produto.controller";
-import { ProtudoService } from "./produto.service";
+import { ProdutoRepository } from "./produto.repository";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProdutoEntity } from "./produto.entity";
+import { ProdutoService } from "./produto.service";
 
 
 @Module({
-    imports:[],
+    imports:[TypeOrmModule.forFeature([ProdutoEntity])],
     controllers:[ProdutoController],
-    providers:[ProtudoService]
+    providers:[ProdutoRepository , ProdutoService]
 })
 export class ProdutoModule{}

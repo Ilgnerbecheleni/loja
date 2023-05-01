@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 
 import { IsNotEmpty } from "class-validator";
+import { ProdutoEntity } from "../produto.entity";
 
 export class ImagemProdutoDTO {
-
+  id:string ;
     @IsNotEmpty({
         message: 'Insira url da imagem do produto',
       })
@@ -12,4 +13,5 @@ export class ImagemProdutoDTO {
         message: 'Insira descricao imagem do produto',
       })
     descricao: string;
+    produto: ProdutoEntity;
   }

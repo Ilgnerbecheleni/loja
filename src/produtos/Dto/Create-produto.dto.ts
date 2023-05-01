@@ -11,8 +11,6 @@ export class CreateProdutoDTO {
   @IsNotEmpty({
     message: 'Insira um nome do produto',
   })
-
-
   nome: string;
 
   @IsNumber()
